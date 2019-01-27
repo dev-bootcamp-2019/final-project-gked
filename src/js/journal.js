@@ -23,16 +23,16 @@ const Journal = {
             })
         });
     },
-
-    createJournalEntry: function (journalEntry, address) {
+    createJournalEntry: function (journalEntry, author) {
         let self = this;
 
         return new Promise((resolve, reject) => {
-            self.instance.create(
-            [
-                journalEntry,
-                address
-            ],
+            self.instance.createJournalEntry(
+                journalEntry.title,
+                journalEntry.body,
+                journalEntry.encrypt,
+                journalEntry.tags,
+                author || window.web3.eth.defaultAccount,
             {from: window.web3.eth.accounts[0]}
             ).then( tx => {
                 resolve(tx);
@@ -41,17 +41,59 @@ const Journal = {
             });
         });
     },
-
-    authorExists: function (address) {
+    getJournalEntryTitle: function (address) {
         let self = this
-
         return new Promise((resolve, reject) => {
-            self.instance.authorExists.call(
+            self.instance.getJournalEntryTitle.call(
                 address || window.web3.eth.defaultAccount, {
                     from: window.web3.eth.accounts[0]
                 }
-            ).then(authorExists => {
-                resolve(authorExists);
+            ).then(titles => {
+                resolve(titles);
+                journalEntry.titles = titles;
+            }).catch(err => {
+                reject(err);
+            })
+        })
+    },
+    getJournalEntryTitle: function (address) {
+        let self = this
+        return new Promise((resolve, reject) => {
+            self.instance.getJournalEntryTitle.call(
+                address || window.web3.eth.defaultAccount, {
+                    from: window.web3.eth.accounts[0]
+                }
+            ).then(titles => {
+                resolve(titles);
+            }).catch(err => {
+                reject(err);
+            })
+        })
+    },
+    getJournalEntryBody: function (address) {
+        let self = this
+        return new Promise((resolve, reject) => {
+            self.instance.getJournalEntryBody.call(
+                address || window.web3.eth.defaultAccount, {
+                    from: window.web3.eth.accounts[0]
+                }
+            ).then(body => {
+                resolve(body);
+            }).catch(err => {
+                reject(err);
+            })
+        })
+    },
+    getJournalEntryTags: function (address) {
+        let self = this
+
+        return new Promise((resolve, reject) => {
+            self.instance.getJournalEntryTags.call(
+                address || window.web3.eth.defaultAccount, {
+                    from: window.web3.eth.accounts[0]
+                }
+            ).then(tags => {
+                resolve(tags);
             }).catch(err => {
                 reject(err);
             })

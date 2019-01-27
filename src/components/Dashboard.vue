@@ -4,17 +4,52 @@
     <!-- <div v-if="userExists">
       Welcome {{ pseudo }}. Destroy your account by clicking <a href="#" @click="destroyAccount">here</a>.
     </div> -->
-    <input  type="text" placeholder="TITLE"/>
-    <div id="tags" style="border:solid; border-color:blue" width="245">Tags</div>
-    <textarea id="tA" width="245" placeholder="YOUR THOUGHTS HERE"></textarea>
-    <br/>
-    <input @click="saveEntry" type="button" value="Sign + Save" style="block"/>
-    <input type="checkbox" /><span> Encrypt the message</span>
+    <form>
+      <label for="titleInp">Name:</label>
+      <input id="titleInp" type="text" />
+
+      <label for="tags">Tags(Separate them with | character</label>
+      <input id="tags" type="text" />
+
+      <label for="tA">Journal Entry:</label>
+      <textarea id="tA"  placeholder="YOUR THOUGHTS HERE"></textarea>
+
+      <label for="checkBInput">Encrypt the message</label>
+      <input id="checkBInput" type="checkbox" />
+      <input @click="saveEntry" type="button" value="Save Journal Entry"/>
+    </form>
+
+    <!-- <input @click="getJournalHistory" type="button" value="Get History" style="block"/> -->
+    <!-- <p> {{ journalEntries }} </p> -->
+    <!-- <ul>
+      <li v-for="item in getJournalHistory">
+        <div id="journalContainer">
+        <sui-container text-align="left">
+          Left Aligned
+        </sui-container>
+        <sui-container text-align="center">
+          Center Aligned
+        </sui-container>
+        <sui-container text-align="right">
+          Right Aligned
+        </sui-container>
+        <b>Justified</b>
+        <sui-divider />
+        <sui-container text-align="justified">
+        <p>
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+        </p>
+        <p>
+          Lorem ipsum dolor sit ame
+        </p>
+        </sui-container>
+        </div>
+        </li>
+      </ul> -->
   </div>
 </template>
 
 <script>
-import Users from '@/js/users'
 import Journal from '@/js/journal'
 
 export default {
@@ -22,48 +57,25 @@ export default {
   data () {
     return {
       msg: 'Welcome to  the OpenJournal dApp. A new way to keep your thoughts, daily.',
-      pseudo: undefined
-    }
-  },
-  computed: {
-    userExists: function () {
-      return (typeof this.pseudo !== 'undefined')
+      pseudo: undefined,
+      journalEntries: []
     }
   },
   beforeCreate: function () {
-    Users.init().then(() => {
-      Users.exists(window.web3.eth.accounts[0]).then((exists) => {
-        if (exists) {
-          // Users.authenticate().then(pseudo => {
-          //   this.pseudo = pseudo
-          // })
-          debugger
-          console.log(exists)
-        }
-      })
-    }).catch(err => {
-      console.log(err)
-    })
     Journal.init().then(() => {
-      Journal.authorExists(window.web3.eth.accounts[0]).then((authorExists) => {
-        if (authorExists) {
-          console.log(authorExists)
-        } else {
-          console.log(authorExists)
-        }
-      })
+      this.getJournalHistory()
     })
+  },
+  created: function () {
   },
   methods: {
     saveEntry: function () {
-      // let self = this;
-      let tags = ['tag1', 'tag2', 'tag3']
+      let d = document
       let journalEntry = {
-        title: 'Test Title',
-        body: 'some more text and as a todo: I need to figure out how much more space can i fit in a single string. I mean what is the character limit',
-        encrypt: false,
-        tags: tags,
-        id: 0
+        title: d.getElementById('titleInp').value,
+        body: d.getElementById('tA').value,
+        encrypt: document.getElementById('checkBInput').checked,
+        tags: 'tag1|tag2|tag3'
       }
       Journal.createJournalEntry(journalEntry, window.web3.eth.accounts[0]).then(tx => {
         console.log(tx)
@@ -71,13 +83,38 @@ export default {
         console.log(err)
       })
     },
-    destroyAccount: function (e) {
-      e.preventDefault()
-      Users.destroy().then(() => {
-        this.pseudo = undefined
-      }).catch(err => {
-        console.log(err)
-      })
+    getJournalHistory: function () {
+      let journalEntries = []
+      let journalEntry = {}
+      Promise.all([
+        Journal.getJournalEntryTitle(window.web3.eth.accounts[0]),
+        Journal.getJournalEntryBody(window.web3.eth.accounts[0]),
+        Journal.getJournalEntryTags(window.web3.eth.accounts[0])])
+        .then(results => {
+          let maxArrayLength = 0
+          if (results[0].length >= results[1].length) {
+            maxArrayLength = results[0].length
+          } else {
+            maxArrayLength = results[1].length
+          }
+          if (results[2].length >= maxArrayLength) {
+            maxArrayLength = results[2].length
+          }
+
+          for (let t = 1; t < maxArrayLength; t++) {
+            journalEntry.title = results[0][t]
+            journalEntry.body = results[1][t]
+            journalEntry.tag = results[2][t]
+            journalEntries.push(journalEntry)
+            console.log('Journal Entry #', t)
+            console.log('Title: ', journalEntry.title)
+            console.log('Body: ', journalEntry.body)
+            console.log('Tags: ', journalEntry.tag)
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+      return journalEntries
     }
   }
 }
@@ -85,7 +122,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+/* h1, h2 {
   font-weight: normal;
   display: block;
 }
@@ -102,5 +139,29 @@ li {
 
 a {
   color: #42b983;
-}
+} */
+
+	form{
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    width: 408px;
+    background: lightblue;
+	}
+	label {
+    display: block;
+    width: 150px;
+	}
+	input, textarea {
+    width: 250px;
+    margin-bottom: 7px;
+	}
+	textarea {
+    height: 150px;
+	}
+	input[type=submit] {
+    width: auto;
+	}
+	
 </style>
