@@ -78,8 +78,11 @@ export default {
         tags: d.getElementById('tags').value
       }
       Journal.createJournalEntry(journalEntry, window.web3.eth.accounts[0]).then(tx => {
+        let alertMessage = 'Journal Entry Successful' + '\n' + 'Title: ' + journalEntry.title + '\n' + 'Body: ' + journalEntry.body + '\n' + 'Tags: ' + journalEntry.tags
+        alert(alertMessage)
         location.reload()
       }).catch(err => {
+        alert('Error creating Journal Entry')
         console.log(err)
       })
     },
