@@ -3069,10 +3069,16 @@
       "links": {},
       "address": "0x84c6edfD233dA85f003618bb0Ce8C2AF9EFB08E3",
       "transactionHash": "0x865c71af9e07ca0d102757988d2fa6e79a25d3dade52736efde2b780c8b4b943"
+    },
+    "1548631615963": {
+      "events": {},
+      "links": {},
+      "address": "0xA77b4fc9B64931f0ae30E6ec74038b8a1f15aa7c",
+      "transactionHash": "0x9d473c4cf27854ac9daaa82a68b40bb5b76acbe8d44cec46bb7e6f668a15d473"
     }
   },
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-01-27T00:09:05.013Z",
+  "updatedAt": "2019-01-27T23:38:20.787Z",
   "devdoc": {
     "methods": {}
   },

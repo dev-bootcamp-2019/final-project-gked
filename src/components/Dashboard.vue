@@ -5,18 +5,18 @@
       Welcome {{ pseudo }}. Destroy your account by clicking <a href="#" @click="destroyAccount">here</a>.
     </div> -->
     <form>
-      <label for="titleInp">Name:</label>
+      <label for="titleInp" class="topElem">Name:</label>
       <input id="titleInp" type="text" />
 
-      <label for="tags">Tags(Separate them with | character</label>
+      <label for="tags">Tags("|" separated)</label>
       <input id="tags" type="text" />
 
       <label for="tA">Journal Entry:</label>
       <textarea id="tA"  placeholder="YOUR THOUGHTS HERE"></textarea>
 
-      <label for="checkBInput">Encrypt the message</label>
-      <input id="checkBInput" type="checkbox" />
-      <input @click="saveEntry" type="button" value="Save Journal Entry"/>
+      <!-- <label for="checkBInput">Encrypt the message</label>
+      <input id="checkBInput" type="checkbox" /> -->
+      <button @click="saveEntry" type="button">Save Journal Entry</button>
     </form>
 
     <!-- <input @click="getJournalHistory" type="button" value="Get History" style="block"/> -->
@@ -74,11 +74,11 @@ export default {
       let journalEntry = {
         title: d.getElementById('titleInp').value,
         body: d.getElementById('tA').value,
-        encrypt: document.getElementById('checkBInput').checked,
-        tags: 'tag1|tag2|tag3'
+        encrypt: false,
+        tags: d.getElementById('tags').value
       }
       Journal.createJournalEntry(journalEntry, window.web3.eth.accounts[0]).then(tx => {
-        console.log(tx)
+        location.reload()
       }).catch(err => {
         console.log(err)
       })
@@ -122,7 +122,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/* h1, h2 {
+h1, h2 {
   font-weight: normal;
   display: block;
 }
@@ -139,29 +139,37 @@ li {
 
 a {
   color: #42b983;
-} */
+}
 
-	form{
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
-    width: 408px;
-    background: lightblue;
-	}
-	label {
-    display: block;
-    width: 150px;
-	}
-	input, textarea {
-    width: 250px;
-    margin-bottom: 7px;
-	}
-	textarea {
-    height: 150px;
-	}
-	input[type=submit] {
-    width: auto;
-	}
-	
+form {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  width: 408px;
+  background: lightblue;
+  margin: 0 auto;
+}
+
+label {
+  display: block;
+  width: 150px;
+}
+
+input, textarea {
+  width: 250px;
+  margin-bottom: 7px;
+}
+
+textarea {
+  height: 150px;
+}
+
+input[type=submit] {
+  width: auto;
+}
+
+label.topElem {
+  padding-top: 5px;
+}
 </style>

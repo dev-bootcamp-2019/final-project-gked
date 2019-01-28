@@ -98,7 +98,7 @@ const Journal = {
                 reject(err);
             })
         })
-    },
+    }
 }
 
 export default Journal

@@ -35,7 +35,7 @@ contract Journal {
 
     /* Map of entries for a given Author */
     mapping (address => Author) public authors;
-    mapping (address => JournalEntry) public entries;
+    mapping (address => JournalEntry) internal entries;
     
     /* Modifiers */
     modifier verifyCaller(address _address)
@@ -45,20 +45,24 @@ contract Journal {
     }
     
     /* Events */
-    
+    event AuthorInfoUpdated(address _address);
+    event NewJournalEntryCreated(address _address);
 
     /* Initialize the contract with the owner*/
-    constructor() public {
+    constructor() public 
+    {
         owner = msg.sender;
     }
 
-    /** Add author's name */
+    /** Add author's name 
+        todo: hook up front-end to this function
+    */
     function addAuthorName(address _address, string memory _name)
         public
-        verifyCaller(_address)
-        returns(bool) {
-            authors[_address].name = _name;
-            return true;
+        verifyCaller(_address) 
+    {
+        authors[_address].name = _name;
+        emit AuthorInfoUpdated(_address);
     }
 
     /* Get author's name */
@@ -66,8 +70,9 @@ contract Journal {
         public
         view
         verifyCaller(_address)
-        returns(string memory) {
-            string memory name = authors[_address].name;
+        returns(string memory)
+    {
+        string memory name = authors[_address].name;
         return name;
     }
 
@@ -80,49 +85,36 @@ contract Journal {
         address _address) 
         public
         verifyCaller(_address)
-        returns (bool) {
-        // entries[_address].title.push(strConcat(_title));
-        // entries[_address].body.push(strConcat(_body));
-        // entries[_address].encrypt.push(_encrypt);
-        // entries[_address].tags.push(strConcat(_tags));
+    {
         entries[_address].title.push(_title);
         entries[_address].body.push(_body);
         entries[_address].encrypt.push(_encrypt);
         entries[_address].tags.push(_tags);
-        return true;
+        emit NewJournalEntryCreated(_address);
     }
 
-    /* Get the list of entries for a given user */
-    function getJournalEntryTitle(address _address) public view returns (string[] memory title) {
-        //todo: 
+    /* Get the list of posts titles for a given user */
+    function getJournalEntryTitle(address _address) public view returns (string[] memory title)
+    {
         return entries[_address].title;
     }
 
-    function getJournalEntryBody(address _address) public view returns (string[] memory body) {
+    /* Get the list of maon body contexts for a given user */
+    function getJournalEntryBody(address _address) public view returns (string[] memory body)
+    {
         return entries[_address].body;
     }
 
-    function getJournalEntryTags(address _address) public view returns (string [] memory tags) {
+    /* Get the list of tags for a given user */
+    function getJournalEntryTags(address _address) public view returns (string [] memory tags)
+    {
         return entries[_address].tags;
     }
 
-    /* Helper functions */
-    // concatenates string with a delimeter of formm ',|--|'
-    function strConcat(string memory _a) internal returns (string memory)
-    {
-        string memory delimeter = ",|--|";
-        bytes memory _ba = bytes(_a);
-        bytes memory _bb = bytes(delimeter);
-     
-        string memory ab = new string(_ba.length + _bb.length );
-        bytes memory ba = bytes(ab);
-        uint k = 0;
-        for (uint i = 0; i < _ba.length; i++) {
-            ba[k++] = _ba[i];
-        }
-        for (uint i = 0; i < _bb.length; i++) {
-            ba[k++] = _bb[i];
-        }
-        return string(ba);
-    }
+    function getJournaEntry(address _address) public view returns (string title, string body, string tags) {
+        title = entries[_address].title;
+        body = entries[_address].body;
+        tags = entries[_address].tags;
+        return (title, body, tags);
+  }
 }
