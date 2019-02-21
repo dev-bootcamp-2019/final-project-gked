@@ -12,7 +12,7 @@
     </div>
 
     <form>
-      <label for="titleInp" class="topElem">Name:</label>
+      <label for="titleInp" class="topElem">Jounral Entry Title:</label>
       <input id="titleInp" type="text" />
 
       <label for="tags">Tags("|" separated)</label>

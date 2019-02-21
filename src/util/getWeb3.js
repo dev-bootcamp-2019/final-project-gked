@@ -9,6 +9,7 @@ import JournalContract from '@contracts/Journal.json'
  * 3. Get networkId - Now we can check the user is connected to the right network to use our dApp
  * 4. Get user account from metamask
  * 5. Get user balance
+ * 6. Get list of Journals for given user
  */
 
  let getWeb3 = new Promise (function (resolve, reject) {

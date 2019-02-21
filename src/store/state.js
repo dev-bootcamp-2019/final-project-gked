@@ -8,13 +8,15 @@ let state = {
         balance: null,
         error: null
     },
-    journal: {
-        title: null,
-        body: null,
-        encrypt: false,
-        tags: null
-    },
-    journals: [],
+    journals: [{
+        journal: {
+            title: null,
+            body: null,
+            encrypt: false,
+            tags: null
+        },
+    }],
     contractInstance: null
 }
+
 export default state

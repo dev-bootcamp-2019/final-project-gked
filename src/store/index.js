@@ -44,6 +44,23 @@ export default new Vuex.Store({
                 })
             })
         },
+        createJournalEntryInstance(state, payload) {
+            return new Promise((resolve, reject) => {
+                self.instance.createJournalEntry(
+                    journalEntry.title,
+                    journalEntry.body,
+                    journalEntry.encrypt,
+                    journalEntry.tags,
+                    author || window.web3.eth.defaultAccount, {
+                        from: window.web3.eth.accounts[0]
+                    }
+                ).then(tx => {
+                    resolve(tx);
+                }).catch(err => {
+                    reject(err);
+                });
+            });
+        },
         updateJournals(state, journals) {
             state.journals = journals;
         }
@@ -55,7 +72,7 @@ export default new Vuex.Store({
                 console.log('committing result to registerWeb3Instance mutation')
                 commit('registerWeb3Instance', result)
             }).catch(e => {
-                console.log('error in action registerWeb3', e)
+                console.log('error in Action registerWeb3', e)
             })
         },
         initializeContract({commit}) {
@@ -64,7 +81,18 @@ export default new Vuex.Store({
                 console.log('commiting result to initializeContractInstance mutation')
                 commit('initializeContractInstance', result)
             }).catch(e => {
-                console.log('error in action initializeContract', e)
+                console.log('error in Action initializeContract', e)
+            })
+        },
+        createJournalEntry({commit}, journal) {
+            console.log('Journal entry creation Action being executed')
+
+            getWeb3.then(result => {
+                console.log('commiting result to createJournalEntryInstance mutation')
+                commit('createJournalEntryInstance', result)
+            })
+            .catch(e => {
+                console.log('error in Action createJournalEntry', e)
             })
         },
         getJournals({commit}, Journal) {
@@ -110,25 +138,6 @@ export default new Vuex.Store({
               console.log(error)
             })
             // return journalEntries
-        },
-        createJournalEntry({commit}, journal) {
-            let self = this;
-
-            return new Promise((resolve, reject) => {
-                self.instance.createJournalEntry(
-                    journalEntry.title,
-                    journalEntry.body,
-                    journalEntry.encrypt,
-                    journalEntry.tags,
-                    author || window.web3.eth.defaultAccount, {
-                        from: window.web3.eth.accounts[0]
-                    }
-                ).then(tx => {
-                    resolve(tx);
-                }).catch(err => {
-                    reject(err);
-                });
-            });
         }
     }
 })
