@@ -1,6 +1,7 @@
 /* eslint-disable */
 import contract from 'truffle-contract'
 import JournalContract from '@contracts/Journal.json'
+import getWeb3 from '../util/getWeb3'
 
 
 const Journal = {
@@ -13,8 +14,7 @@ const Journal = {
 
         return new Promise(function (resolve, reject) {
             self.contract = contract(JournalContract);
-            self.contract.setProvider(window.web3.currentProvider);
-
+            self.contract.setProvider(getWeb3.currentProvider);
             self.contract.deployed().then(instance => {
                 self.instance = instance;
                 resolve();
@@ -40,65 +40,50 @@ const Journal = {
                 reject(err);
             });
         });
-    },
-    getJournalEntryTitle: function (address) {
-        let self = this
-        return new Promise((resolve, reject) => {
-            self.instance.getJournalEntryTitle.call(
-                address || window.web3.eth.defaultAccount, {
-                    from: window.web3.eth.accounts[0]
-                }
-            ).then(titles => {
-                resolve(titles);
-                journalEntry.titles = titles;
-            }).catch(err => {
-                reject(err);
-            })
-        })
-    },
-    getJournalEntryTitle: function (address) {
-        let self = this
-        return new Promise((resolve, reject) => {
-            self.instance.getJournalEntryTitle.call(
-                address || window.web3.eth.defaultAccount, {
-                    from: window.web3.eth.accounts[0]
-                }
-            ).then(titles => {
-                resolve(titles);
-            }).catch(err => {
-                reject(err);
-            })
-        })
-    },
-    getJournalEntryBody: function (address) {
-        let self = this
-        return new Promise((resolve, reject) => {
-            self.instance.getJournalEntryBody.call(
-                address || window.web3.eth.defaultAccount, {
-                    from: window.web3.eth.accounts[0]
-                }
-            ).then(body => {
-                resolve(body);
-            }).catch(err => {
-                reject(err);
-            })
-        })
-    },
-    getJournalEntryTags: function (address) {
-        let self = this
+    }// ,
+    // getJournalEntryTitle: function (address) {
+    //     let self = this
+    //     return new Promise((resolve, reject) => {
+    //         self.instance.getJournalEntryTitle.call(
+    //             address || window.web3.eth.defaultAccount, {
+    //                 from: window.web3.eth.accounts[0]
+    //             }
+    //         ).then(titles => {
+    //             resolve(titles);
+    //         }).catch(err => {
+    //             reject(err);
+    //         })
+    //     })
+    // },
+    // getJournalEntryBody: function (address) {
+    //     let self = this
+    //     return new Promise((resolve, reject) => {
+    //         self.instance.getJournalEntryBody.call(
+    //             address || window.web3.eth.defaultAccount, {
+    //                 from: window.web3.eth.accounts[0]
+    //             }
+    //         ).then(body => {
+    //             resolve(body);
+    //         }).catch(err => {
+    //             reject(err);
+    //         })
+    //     })
+    // },
+    // getJournalEntryTags: function (address) {
+    //     let self = this
 
-        return new Promise((resolve, reject) => {
-            self.instance.getJournalEntryTags.call(
-                address || window.web3.eth.defaultAccount, {
-                    from: window.web3.eth.accounts[0]
-                }
-            ).then(tags => {
-                resolve(tags);
-            }).catch(err => {
-                reject(err);
-            })
-        })
-    }
+    //     return new Promise((resolve, reject) => {
+    //         self.instance.getJournalEntryTags.call(
+    //             address || window.web3.eth.defaultAccount, {
+    //                 from: window.web3.eth.accounts[0]
+    //             }
+    //         ).then(tags => {
+    //             resolve(tags);
+    //         }).catch(err => {
+    //             reject(err);
+    //         })
+    //     })
+    // }
 }
 
 export default Journal
