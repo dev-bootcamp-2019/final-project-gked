@@ -69,5 +69,50 @@ import JournalContract from '@contracts/Journal.json'
         })
     })
 })
+.then(result => {
+    return new Promise(function (resolve, reject) {
+        // retrieve list of journals
+        result.web3().
+    })
+    Promise.all([
+            web3.instance.getJournalEntryTitle.call(
+                address || window.web3.eth.defaultAccount, {
+                    from: window.web3.eth.accounts[0]
+                }),
+            web3.instance.getJournalEntryBody.call(
+                address || window.web3.eth.defaultAccount, {
+                    from: window.web3.eth.accounts[0]
+                }),
+            web3.instance.getJournalEntryTags.call(
+                address || window.web3.eth.defaultAccount, {
+                    from: window.web3.eth.accounts[0]
+                })
+        ])
+        .then(results => commit('updateJournals', (results) => {
+            let maxArrayLength = 0
+            if (results[0].length >= results[1].length) {
+                maxArrayLength = results[0].length
+            } else {
+                maxArrayLength = results[1].length
+            }
+            if (results[2].length >= maxArrayLength) {
+                maxArrayLength = results[2].length
+            }
+
+            for (let t = 1; t < maxArrayLength; t++) {
+                journalEntry.title = results[0][t]
+                journalEntry.body = results[1][t]
+                journalEntry.tag = results[2][t]
+                journalEntries.push(journalEntry)
+                console.log('Journal Entry #', t)
+                console.log('Title: ', journalEntry.title)
+                console.log('Body: ', journalEntry.body)
+                console.log('Tags: ', journalEntry.tag)
+            }
+            results = results
+        })).catch(error => {
+            console.log(error)
+        })
+})
 
 export default getWeb3
